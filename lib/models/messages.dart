@@ -10,8 +10,8 @@ class Messages extends StatelessWidget {
   final String message;
   final String date;
   final Function onAnimatedTextFinished;
-  final isAnimated = ValueNotifier(false);
-
+  final VoidCallback onTap; // Added callback for tap gesture
+  final ValueNotifier<bool> isAnimated = ValueNotifier(false);
 
   Messages({
     Key? key,
@@ -19,63 +19,65 @@ class Messages extends StatelessWidget {
     required this.message,
     required this.date,
     required this.onAnimatedTextFinished,
+    required this.onTap, // Initialize the callback
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(small),
-      margin: const EdgeInsets.symmetric(vertical: small).copyWith(
-        left: isUser ? 100 : xsmall,
-        right: isUser ? xsmall : 100,
-      ),
-      decoration: BoxDecoration(
-        color: isUser ? userChat : resChat,
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(xsmall),
-          bottomLeft: isUser ? const Radius.circular(xsmall) : Radius.zero,
-          topRight: const Radius.circular(xsmall),
-          bottomRight: !isUser ? const Radius.circular(xsmall) : Radius.zero,
+    return GestureDetector(
+      onTap: onTap, // Handle the tap gesture
+      onLongPress: () async {
+        await Clipboard.setData(ClipboardData(text: message));
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(small),
+        margin: const EdgeInsets.symmetric(vertical: small).copyWith(
+          left: isUser ? 100 : xsmall,
+          right: isUser ? xsmall : 100,
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (!isUser)
-            GestureDetector(
-              onLongPress: () async{
-                await Clipboard.setData(ClipboardData(text: message));
-              },
-              child: AnimatedTextKit(
+        decoration: BoxDecoration(
+          color: isUser ? userChat : resChat,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(xsmall),
+            bottomLeft: isUser ? const Radius.circular(xsmall) : Radius.zero,
+            topRight: const Radius.circular(xsmall),
+            bottomRight: !isUser ? const Radius.circular(xsmall) : Radius.zero,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!isUser)
+              AnimatedTextKit(
                 animatedTexts: [
                   TyperAnimatedText(message, textStyle: messageText),
                 ],
                 totalRepeatCount: 1,
                 isRepeatingAnimation: false,
                 stopPauseOnTap: true,
-
                 onFinished: () {
                   isAnimated.value = true;
                   onAnimatedTextFinished();
                 },
               ),
-            ),
-          if (isUser)
-            Text(
-              message,
-              style: messageText,
-            ),
-          Row(
-            mainAxisAlignment: isUser ? MainAxisAlignment.start : MainAxisAlignment.end,
-            children: [
+            if (isUser)
               Text(
-                "\n$date",
-                style: dateText,
+                message,
+                style: messageText,
               ),
-            ],
-          ),
-        ],
+            Row(
+              mainAxisAlignment:
+                  isUser ? MainAxisAlignment.start : MainAxisAlignment.end,
+              children: [
+                Text(
+                  "\n$date",
+                  style: dateText,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

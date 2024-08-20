@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "878720279008",
+    "project_id": "flutter-test-4232d",
+    "storage_bucket": "flutter-test-4232d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878720279008:android:d3324a789699b5045bcb85",
+        "android_client_info": {
+          "package_name": "com.example.gemini_chatbot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU6k6OoPe224MZlTyu_ZYcoWBe3Pq0Exw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
